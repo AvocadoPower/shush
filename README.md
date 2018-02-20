@@ -1,5 +1,12 @@
 # shush
 
+## To use:
+1) npm install
+2) update environment variables
+3) make sure mysql is running 
+4) npm run build
+5) npm start
+
 ## Wireframes
 ##### overview
 ![WF overview](https://i.imgur.com/u9ZJWuO.png)
