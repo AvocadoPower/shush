@@ -14,7 +14,7 @@ if (process.env.PROD) {
   console.log('set pw');
   pw = 'NC8Jo8GGBp6CodbP';
 }
-const sequelize = new Sequelize('shush', 'root', pw, {
+const sequelize = new Sequelize('shush', 'root', process.env.DBPASS, {
   host: '127.0.0.1',
   dialect: 'mysql',
 });
