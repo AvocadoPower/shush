@@ -1,6 +1,6 @@
 # shush
 
-## To use:
+## To run locally:
 1) npm install
 2) update environment variables
 3) make sure mysql is running 
