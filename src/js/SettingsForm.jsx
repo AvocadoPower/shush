@@ -7,7 +7,8 @@ class SettingsForm extends React.Component {
     this.state = {
       cGate: null,
       cMessage: null,
-      cClip: null
+      cClip: null,
+      cPhone: null
     };
   }
 
@@ -21,24 +22,30 @@ class SettingsForm extends React.Component {
       cMessage: e.target.value
     });
   }
+  onPChange(e) {
+    this.setState({
+      cPhone: e.target.value
+    });
+  }
   onCChange(e) {
     this.setState({
       cClip: e.target.value
     });
   }
 
-  submitTrigger(gate, text, clip) {
+  submitTrigger(gate, text, clip, phone) {
     const newTrig = {
       gate: gate,
       message: text,
-      clip: clip
+      clip: clip,
+      phone: phone,
     }
     console.log('submitting trigger\n', newTrig)
     this.props.addTrigger(newTrig);
   }
   render() {
     const { triggers , addTrigger , editTrigger , deleteTrigger} = this.props;
-    const { cGate, cMessage, cClip } = this.state;
+    const { cGate, cMessage, cPhone, cClip} = this.state;
     return (
       <div>
         <table className="table">
@@ -48,6 +55,7 @@ class SettingsForm extends React.Component {
               <th>#</th>
               <th>noise limit</th>
               <th>text message</th>
+              <th>phone number</th>
               <th>audio clip</th>
               <th>edit</th>
               <th>remove</th>
@@ -82,12 +90,19 @@ class SettingsForm extends React.Component {
               <option>100 dB - jackhammer</option>
             </select>
           </div>
-          &nbsp;&nbsp;&nbsp;
+          &nbsp;&nbsp;
           <div className="form-group">
             <label htmlFor="newMessage">text message</label>
+            &nbsp;
             <input type="text" className="form-control" id="newMessage" placeholder="message" onChange={this.onMChange.bind(this)}/>
           </div>
-          &nbsp;&nbsp;&nbsp;
+          &nbsp;&nbsp;
+          <div className="form-group">
+            <label htmlFor="phoneNumber">phone number</label>
+            &nbsp;
+            <input type="text" className="form-control" id="phoneNumber" placeholder="phone number" onChange={this.onPChange.bind(this)}/>
+          </div>
+          &nbsp;&nbsp;
           <div className="form-group">
             <label htmlFor="newAudioClip">audio clip</label>
             &nbsp;
@@ -107,13 +122,13 @@ class SettingsForm extends React.Component {
           &nbsp;&nbsp;&nbsp;
           <br/>
           {(!cGate || !cMessage || !cClip) && 
-           <fieldset disabled="disabled">
-            <button type="button" className="btn btn-success">add trigger</button>
-           </fieldset>
+            <fieldset disabled="disabled">
+              <button type="button" className="btn btn-success">add trigger</button>
+            </fieldset>
           }
           {cGate && cMessage && cClip &&
             <fieldset>
-              <button type="button" className="btn btn-success" onClick={this.submitTrigger.bind(this, cGate, cMessage, cClip)}>add trigger</button>
+              <button type="button" className="btn btn-success" onClick={this.submitTrigger.bind(this, cGate, cMessage, cClip, cPhone)}>add trigger</button>
             </fieldset>
           }
         </div>

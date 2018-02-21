@@ -8,7 +8,8 @@ class TriggerRow extends React.Component {
       // trigger: Object.assign({}, this.props.trigger),
       cGate: this.props.trigger.gate,
       cMessage: this.props.trigger.message,
-      cClip: this.props.trigger.clip
+      cClip: this.props.trigger.clip,
+      cPhone: this.props.trigger.phone
     };
   }
   
@@ -20,11 +21,12 @@ class TriggerRow extends React.Component {
     console.log('editing is ', this.state.editing)
   }
   onSaveEditClick() {
-    const { cGate , cMessage , cClip } = this.state;
+    const { cGate , cMessage , cClip, cPhone } = this.state;
     let newTrigger = Object.assign({}, this.props.trigger);
     newTrigger.gate = cGate;
     newTrigger.message = cMessage;
     newTrigger.clip = cClip;
+    newTrigger.phone = cPhone;
     this.setState({
       editing: false
     })
@@ -44,6 +46,11 @@ class TriggerRow extends React.Component {
       cMessage: e.target.value
     });
   }
+  onPChange(e) {
+    this.setState({
+      cPhone: e.target.value
+    });
+  }
   onCChange(e) {
     this.setState({
       cClip: e.target.value
@@ -52,7 +59,7 @@ class TriggerRow extends React.Component {
   
   render() {
     const { index, trigger, addTrigger, editTrigger, deleteTrigger } = this.props;
-    const { editing , cGate, cMessage, cClip} = this.state;
+    const { editing , cGate, cMessage, cClip, cPhone} = this.state;
     return (
         <tr>
           <td>
@@ -82,6 +89,17 @@ class TriggerRow extends React.Component {
               onChange={this.onMChange.bind(this)} 
               />
             }
+          </td>
+          <td>
+          {!editing ? trigger.phone :
+            <input
+              type="text"
+              className="form-control"
+              id="phoneNumber"
+              value={cPhone}
+              onChange={this.onPChange.bind(this)}
+            />
+          }
           </td>
           <td>
             {!editing ? trigger.clip :
