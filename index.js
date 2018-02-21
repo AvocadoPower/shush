@@ -12,6 +12,7 @@ const app = express();
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const { User } = require('./db/config');
+const twilio = require("twilio")(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
 const PORT = process.env.PORT || 3000;
 
 app.use(express.static(`${__dirname}/dist`));
@@ -71,6 +72,23 @@ app.get('/trigger', util.getUserTriggers);
 app.post('/trigger', util.addTrigger);
 app.put('/trigger', util.updateTrigger);
 app.delete('/trigger', util.deleteTrigger);
+
+// handle /sms route:
+app.post('/sms', (req, res) => {
+  twilio.messages.create(
+    {
+      // change to actual phone number
+      to: process.env.MY_PHONE,
+      from: process.env.TWILIO_PHONE,
+      // change to be actual text message (from )
+      body: 'This is from our test message!',
+    },
+    (err, message) => {
+      console.log(message.sid);
+    }
+  )
+  res.header(200).send('text sent!');
+});
 
 // route for handling 404 requests(unavailable routes)
 app.use(function (req, res, next) {
