@@ -68,7 +68,7 @@ module.exports = {
     axios.post('/sms', {
       data: {
         message: message,
-        phone: 'still need to get the phone!',
+        phone: phone,
       }
     });
   }

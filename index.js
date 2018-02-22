@@ -80,10 +80,8 @@ app.post('/sms', (req, res) => {
   // successfully send twilio message:
   twilio.messages.create(
     {
-      // change to actual phone number
-      to: process.env.MY_PHONE,
+      to: `+1${req.body.data.phone}`,
       from: process.env.TWILIO_PHONE,
-      // change to be actual text message (from )
       body: `You asked us to let you know: ${req.body.data.message}
       -your friends at Shush`,
     },

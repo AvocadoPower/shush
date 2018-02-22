@@ -166,14 +166,23 @@ class App extends Component {
   // fire off the trigger
   // sets displayed message and plays sound clip
   triggerEvent(trigger, vol) {
-    // TODO: clean this up:
-      // make modular by adding parts to /services/requestHelper.js
-      console.log('sending ', trigger.message);
-    util.sendSMS(trigger.message, );
     // wrap in set time out, so doesn't get message continuously forever
-    // check to see if trigger has a phone number, and if it is a 10 digit number
-    // if so, make http req to /sms
-    // else alert issue to user
+    // check to see if trigger has a phone number
+      // TODO: make good measure to see 'if phone'
+    if(trigger.phone) {
+      // if so, check format
+      if(typeof trigger.phone === 'number' && trigger.phone.toString().length === 10){
+        // if good formatting make http req to /sms
+        console.log('sending ', trigger.message);
+        util.sendSMS(trigger.message, trigger.phone);
+      } else {
+        //else, alert user why can't send sms
+        console.log('Sorry, we are having a difficult time understanding your phone number. Sometimes people forget to give all 10 digits or accidentally type non numeric characters. The format should be 0000000000');
+
+      }
+    } else{
+      console.log('no trigger.phone, sorry');
+    }
 
     this.setState({
       message: trigger.message,
