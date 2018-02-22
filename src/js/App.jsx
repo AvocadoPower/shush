@@ -166,6 +166,14 @@ class App extends Component {
   // fire off the trigger
   // sets displayed message and plays sound clip
   triggerEvent(trigger, vol) {
+    // TODO: clean this up:
+      // make modular by adding parts to /services/requestHelper.js
+    util.sendSMS();
+    // wrap in set time out, so doesn't get message continuously forever
+    // check to see if trigger has a phone number, and if it is a 10 digit number
+    // if so, make http req to /sms
+    // else alert issue to user
+
     this.setState({
       message: trigger.message,
     });

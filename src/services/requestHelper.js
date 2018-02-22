@@ -64,4 +64,12 @@ module.exports = {
         console.log('error deleting trigger', err);
       });
   },
+  sendSMS: function () {
+    axios.post('/sms', {
+      data: {
+        message: 'still need to get the message!',
+        phone: 'still need to get the phone!',
+      }
+    });
+  }
 }
