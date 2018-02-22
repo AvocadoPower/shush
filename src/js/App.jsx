@@ -168,7 +168,8 @@ class App extends Component {
   triggerEvent(trigger, vol) {
     // TODO: clean this up:
       // make modular by adding parts to /services/requestHelper.js
-    util.sendSMS();
+      console.log('sending ', trigger.message);
+    util.sendSMS(trigger.message, );
     // wrap in set time out, so doesn't get message continuously forever
     // check to see if trigger has a phone number, and if it is a 10 digit number
     // if so, make http req to /sms
