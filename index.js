@@ -12,6 +12,7 @@ const app = express();
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const { User } = require('./db/config');
+const twilio = require("twilio")(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
 const PORT = process.env.PORT || 3000;
 
 app.use(express.static(`${__dirname}/dist`));
@@ -71,6 +72,25 @@ app.get('/trigger', util.getUserTriggers);
 app.post('/trigger', util.addTrigger);
 app.put('/trigger', util.updateTrigger);
 app.delete('/trigger', util.deleteTrigger);
+// TODO: handle trigger route here???
+
+// handle /sms route:
+app.post('/sms', (req, res) => {
+  console.log('hit app.post(/sms)!', req.body);
+  // successfully send twilio message:
+  twilio.messages.create(
+    {
+      to: `+1${req.body.data.phone}`,
+      from: process.env.TWILIO_PHONE,
+      body: `You asked us to let you know: ${req.body.data.message}
+      -your friends at Shush`,
+    },
+    (err, message) => {
+      console.log(message.sid);
+    }
+  )
+  res.header(200).send(`text sent! ${req.body}`);
+});
 
 // route for handling 404 requests(unavailable routes)
 app.use(function (req, res, next) {

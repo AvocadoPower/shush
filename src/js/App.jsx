@@ -166,6 +166,24 @@ class App extends Component {
   // fire off the trigger
   // sets displayed message and plays sound clip
   triggerEvent(trigger, vol) {
+    // wrap in set time out, so doesn't get message continuously forever
+    // check to see if trigger has a phone number
+      // TODO: make good measure to see 'if phone'
+    if(trigger.phone_number) {
+      // if so, check format
+      if(!isNaN(parseInt(trigger.phone_number)) && trigger.phone_number.toString().length === 10){
+        // if good formatting make http req to /sms
+        console.log('sending ', trigger.message);
+        util.sendSMS(trigger.message, trigger.phone_number);
+      } else {
+        //else, alert user why can't send sms
+        console.log('Sorry, we are having a difficult time understanding your phone number. Sometimes people forget to give all 10 digits or accidentally type non numeric characters. The format should be 0000000000');
+
+      }
+    } else{
+      console.log('no trigger.phone, sorry');
+    }
+
     this.setState({
       message: trigger.message,
     });
