@@ -23,17 +23,17 @@ const sequelize = new Sequelize('shush', 'root', process.env.DBPASS, {
 // define user
 const User = sequelize.define('user', {
   name: Sequelize.STRING,
-  password: Sequelize.STRING
+  password: Sequelize.STRING,
 });
 
-User.generateHash = function(password) {
+User.generateHash = function (password) {
   return bcrypt.hash(password, bcrypt.genSaltSync(8));
 };
 
-User.prototype.validPassword = function(password) {
+User.prototype.validPassword = function (password) {
   return bcrypt.compare(password, this.password);
 };
-  
+
 User.sync();
 
 // define moment
@@ -49,6 +49,7 @@ User.hasMany(Moment, { foreignKey: 'id_user' });
 const Trigger = sequelize.define('trigger', {
   gate: Sequelize.FLOAT,
   message: Sequelize.STRING,
+  phone_number: Sequelize.STRING,
   clip: Sequelize.STRING,
 });
 

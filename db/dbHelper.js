@@ -12,7 +12,7 @@ const {
 
 module.exports = {
   // get all users
-  getUsers: function (callback) {
+  getUsers(callback) {
     User.findAll()
       .then((users) => {
         callback(null, users);
@@ -22,15 +22,15 @@ module.exports = {
       });
   },
   // create new user
-  addUser: function(user, callback) {
+  addUser(user, callback) {
     User.generateHash(user.password)
       .then((hash) => {
         user.password = hash;
         User.create(user, { fields: ['name', 'password'] })
-          .then(user => {
+          .then((user) => {
             callback(null, user);
           })
-          .catch(err => {
+          .catch((err) => {
             callback(err);
           });
       })
@@ -39,11 +39,11 @@ module.exports = {
       });
   },
   // create new trigger tied to user
-  addTrigger: function(user, trigger, callback) {
+  addTrigger(user, trigger, callback) {
     User.findById(user.id)
       .then((user) => {
-        trigger['id_user'] = user.id;
-        return Trigger.create(trigger, { fields: ['gate', 'message', 'clip', 'id_user'] });
+        trigger.id_user = user.id;
+        return Trigger.create(trigger, { fields: ['gate', 'message', 'phone_number', 'clip', 'id_user'] });
       })
       .then((newTrigger) => {
         callback(null, newTrigger);
@@ -53,11 +53,9 @@ module.exports = {
       });
   },
   // get triggers of given user
-  getUserTriggers: function (user, callback) {
+  getUserTriggers(user, callback) {
     User.findById(user.id)
-      .then((user) => {
-        return user.getTriggers();
-      })
+      .then(user => user.getTriggers())
       .then((triggers) => {
         callback(null, triggers);
       })
@@ -66,11 +64,9 @@ module.exports = {
       });
   },
   // update given trigger
-  updateTrigger: function(trigger, callback) {
+  updateTrigger(trigger, callback) {
     Trigger.findById(trigger.id)
-      .then((found) => {
-        return found.update(trigger, { fields: ['gate', 'message', 'clip'] }).save();
-      })
+      .then(found => found.update(trigger, { fields: ['gate', 'message', 'phone_number', 'clip'] }).save())
       .then((updatedTrigger) => {
         callback(null, updatedTrigger);
       })
@@ -79,11 +75,9 @@ module.exports = {
       });
   },
   // delete given trigger
-  deleteTrigger: function(trigger, callback) {
+  deleteTrigger(trigger, callback) {
     Trigger.findById(trigger.id)
-      .then((found) => {
-        return found.destroy().save();
-      })
+      .then(found => found.destroy().save())
       .then(() => {
         callback(null);
       })

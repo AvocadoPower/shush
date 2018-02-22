@@ -17,7 +17,7 @@ module.exports = {
   entry: path.join(paths.JS, 'App.jsx'),
   output: {
     path: paths.DIST,
-    filename: 'app.bundle.js'
+    filename: 'app.bundle.js',
   },
   // Tell webpack to use html plugin
   // index.html is used as a template in which it'll inject bundled app.
@@ -65,5 +65,9 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx'],
   },
-  
+
+  watchOptions: {
+    poll: true,
+  },
+
 };
