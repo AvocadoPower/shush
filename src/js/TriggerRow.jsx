@@ -8,8 +8,8 @@ class TriggerRow extends React.Component {
       // trigger: Object.assign({}, this.props.trigger),
       cGate: this.props.trigger.gate,
       cMessage: this.props.trigger.message,
+      cPhone: this.props.trigger.phone_number,
       cClip: this.props.trigger.clip,
-      cPhone: this.props.trigger.phone
     };
   }
   
@@ -25,8 +25,8 @@ class TriggerRow extends React.Component {
     let newTrigger = Object.assign({}, this.props.trigger);
     newTrigger.gate = cGate;
     newTrigger.message = cMessage;
+    newTrigger.phone_number = cPhone;
     newTrigger.clip = cClip;
-    newTrigger.phone = cPhone;
     this.setState({
       editing: false
     })
@@ -59,7 +59,7 @@ class TriggerRow extends React.Component {
   
   render() {
     const { index, trigger, addTrigger, editTrigger, deleteTrigger } = this.props;
-    const { editing , cGate, cMessage, cClip, cPhone} = this.state;
+    const { editing , cGate, cMessage, cPhone, cClip} = this.state;
     return (
         <tr>
           <td>
@@ -91,7 +91,7 @@ class TriggerRow extends React.Component {
             }
           </td>
           <td>
-          {!editing ? trigger.phone :
+          {!editing ? trigger.phone_number :
             <input
               type="text"
               className="form-control"

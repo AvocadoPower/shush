@@ -33,12 +33,12 @@ class SettingsForm extends React.Component {
     });
   }
 
-  submitTrigger(gate, text, clip, phone) {
+  submitTrigger(gate, text, phone_number, clip) {
     const newTrig = {
       gate: gate,
       message: text,
+      phone_number: phone_number,
       clip: clip,
-      phone: phone,
     }
     console.log('submitting trigger\n', newTrig)
     this.props.addTrigger(newTrig);
@@ -128,7 +128,7 @@ class SettingsForm extends React.Component {
           }
           {cGate && cMessage && cClip &&
             <fieldset>
-              <button type="button" className="btn btn-success" onClick={this.submitTrigger.bind(this, cGate, cMessage, cClip, cPhone)}>add trigger</button>
+              <button type="button" className="btn btn-success" onClick={this.submitTrigger.bind(this, cGate, cMessage, cPhone, cClip)}>add trigger</button>
             </fieldset>
           }
         </div>
