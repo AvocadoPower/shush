@@ -84,7 +84,8 @@ app.post('/sms', (req, res) => {
       to: process.env.MY_PHONE,
       from: process.env.TWILIO_PHONE,
       // change to be actual text message (from )
-      body: 'This is from our test message!',
+      body: `You asked us to let you know: ${req.body.data.message}
+      -your friends at Shush`,
     },
     (err, message) => {
       console.log(message.sid);
