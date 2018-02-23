@@ -51,8 +51,8 @@ const Trigger = sequelize.define('trigger', {
   message: Sequelize.STRING,
   phone_number: Sequelize.STRING,
   clip: Sequelize.STRING,
-  listen_stop: Sequelize.DATE,
-  listen_start: Sequelize.DATE,
+  listen_stop: Sequelize.TIME,
+  listen_start: Sequelize.TIME,
 });
 
 User.hasMany(Trigger, { foreignKey: 'id_user' });

@@ -80,7 +80,7 @@ module.exports = {
     User.findById(user.id)
       .then((user) => {
         trigger.id_user = user.id;
-        return Trigger.create(trigger, { fields: ['gate', 'message', 'phone_number', 'clip', 'id_user'] });
+        return Trigger.create(trigger, { fields: ['gate', 'message', 'phone_number', 'clip', 'listen_stop', 'listen_start', 'id_user'] });
       })
       .then((newTrigger) => {
         callback(null, newTrigger);
@@ -104,7 +104,7 @@ module.exports = {
   // update given trigger
   updateTrigger(trigger, callback) {
     Trigger.findById(trigger.id)
-      .then(found => found.update(trigger, { fields: ['gate', 'message', 'phone_number', 'clip'] }).save())
+      .then(found => found.update(trigger, { fields: ['gate', 'message', 'phone_number', 'clip', 'listen_stop', 'listen_start'] }).save())
       .then((updatedTrigger) => {
         callback(null, updatedTrigger);
       })
