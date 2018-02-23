@@ -11,7 +11,7 @@ class TriggerRow extends React.Component {
       cPhone: this.props.trigger.phone_number,
       cClip: this.props.trigger.clip,
       cStart: this.props.trigger.listen_start,
-      cEnd: this.props.trigger.listen_end
+      cStop: this.props.trigger.listen_stop
     };
   }
   
@@ -23,14 +23,14 @@ class TriggerRow extends React.Component {
     console.log('editing is ', this.state.editing)
   }
   onSaveEditClick() {
-    const { cGate , cMessage , cClip, cPhone, cStart, cEnd} = this.state;
+    const { cGate , cMessage , cClip, cPhone, cStart, cStop} = this.state;
     let newTrigger = Object.assign({}, this.props.trigger);
     newTrigger.gate = cGate;
     newTrigger.message = cMessage;
     newTrigger.phone_number = cPhone;
     newTrigger.clip = cClip;
-    newTrigger.listen_start;
-    newTrigger.listen_end;
+    newTrigger.listen_start = cStart;
+    newTrigger.listen_stop = cStop;
     this.setState({
       editing: false
     })
@@ -62,7 +62,7 @@ class TriggerRow extends React.Component {
   }
   onEChange(e) {
     this.setState({
-      cEnd: e.target.value
+      cStop: e.target.value
     });
   }
   onCChange(e) {
@@ -73,7 +73,7 @@ class TriggerRow extends React.Component {
   
   render() {
     const { index, trigger, addTrigger, editTrigger, deleteTrigger } = this.props;
-    const { editing , cGate, cMessage, cPhone, cClip, cStart, cEnd} = this.state;
+    const { editing , cGate, cMessage, cPhone, cClip, cStart, cStop} = this.state;
     return (
         <tr>
           <td>
@@ -144,12 +144,12 @@ class TriggerRow extends React.Component {
           }
           </td>
           <td>
-          {!editing ? trigger.listen_end :
+          {!editing ? trigger.listen_stop :
             <input
               type="time"
               className="form-control"
               id="timeStart"
-              value={cEnd}
+              value={cStop}
               onChange={this.onEChange.bind(this)}
             />
           }
