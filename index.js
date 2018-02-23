@@ -69,6 +69,7 @@ app.get('/logout', (req, res) => {
 // handle sound route
 app.get('/sound', util.getUserSounds);
 app.post('/sound', util.addSound);
+app.delete('/sound', util.deleteSound);
 
 // handle /trigger route
 app.get('/trigger', util.getUserTriggers);
