@@ -204,6 +204,7 @@ class App extends Component {
     if (route === 'settings' && this.state.rendSettings) {
       route = 'mic';
     }
+
     this.setState({
       rendMic: route === 'mic',
       rendLogin: route === 'login',
@@ -315,7 +316,7 @@ class App extends Component {
           {isLoggedIn && 
             <div>
             <button type="button" className="btn btn-lg btn-toggle" onClick={this.toggleAndGetTrigger.bind(this)}>
-              manage time
+              {this.state.triggerBoolean ? 'Notifications: on' : 'Notifications: off'}
             </button>
             &nbsp;&nbsp;
             <button type="button" className="btn btn-lg btn-success" onClick={this.routeButtonClick.bind(this, 'settings')}>
