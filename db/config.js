@@ -56,6 +56,17 @@ const Trigger = sequelize.define('trigger', {
 User.hasMany(Trigger, { foreignKey: 'id_user' });
 Trigger.belongsTo(User, { foreignKey: 'id_user' });
 
+// define sound
+const Sound = sequelize.define('sound', {
+  name: Sequelize.STRING,
+  url: Sequelize.STRING,
+});
+
+Sound.belongsTo(Trigger, { foreignKey: 'clip_id' });
+Sound.belongsTo(User, { foreignKey: 'user_id' });
+Trigger.hasOne(Sound, { foreignKey: 'clip_id' });
+User.hasMany(Sound, { foreignKey: 'user_id' });
+
 // define event
 const Event = sequelize.define('event', {
   timestamp: Sequelize.DATE,
@@ -67,6 +78,7 @@ Event.belongsTo(Trigger, { foreignKey: 'id_trigger' });
 User.sync();
 Moment.sync();
 Trigger.sync();
+Sound.sync();
 Event.sync();
 
 module.exports = {
@@ -74,4 +86,5 @@ module.exports = {
   Moment,
   Trigger,
   Event,
+  Sound,
 };

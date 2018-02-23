@@ -8,11 +8,12 @@ const session = require('express-session');
 const request = require('request');
 const bodyParser = require('body-parser');
 const util = require('./lib/requestHelper');
-const app = express();
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const { User } = require('./db/config');
-const twilio = require("twilio")(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
+const twilio = require('twilio')(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
+
+const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.static(`${__dirname}/dist`));
@@ -29,17 +30,15 @@ app.use(cookieParser());
 app.get('/user', util.getUsers);
 app.post('/user', util.addUser);
 
-app.use(
-  session({
-    key: 'user_sid',
-    secret: 'somerandonstuffs',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      expires: 600000
-    }
-  })
-);
+app.use(session({
+  key: 'user_sid',
+  secret: 'somerandonstuffs',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    expires: 600000,
+  }
+}));
 
 app.use((req, res, next) => {
   if (req.cookies.user_sid && !req.session.user) {
@@ -67,6 +66,10 @@ app.get('/logout', (req, res) => {
   }
 });
 
+// handle sound route
+app.get('/sound', util.getUserSounds);
+app.post('/sound', util.addSound);
+
 // handle /trigger route
 app.get('/trigger', util.getUserTriggers);
 app.post('/trigger', util.addTrigger);
@@ -88,12 +91,12 @@ app.post('/sms', (req, res) => {
     (err, message) => {
       console.log(message.sid);
     }
-  )
+  );
   res.header(200).send(`text sent! ${req.body}`);
 });
 
 // route for handling 404 requests(unavailable routes)
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
   res.status(404).send('Sorry can\'t find that!');
 });
 

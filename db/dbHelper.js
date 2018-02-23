@@ -38,6 +38,43 @@ module.exports = {
         console.error(err);
       });
   },
+  // create new sound tied to user
+  addSound(user, sound, callback) {
+    User.findById(user.id)
+      .then((user) => {
+        sound.id_user = user.id;
+        return Sound.create(sound);
+      })
+      .then((newSound) => {
+        callback(null, newSound);
+      })
+      .catch((err) => {
+        callback(err);
+      });
+  },
+
+  // get sounds of given user
+  getUserSounds(user, callback) {
+    User.findById(user.id)
+      .then(user => user.getSounds())
+      .then((sounds) => {
+        callback(null, sounds);
+      })
+      .catch((err) => {
+        callback(err);
+      });
+  },
+  // delete given sound
+  deleteSound(sound, callback) {
+    Sound.findById(sound.id)
+      .then(found => found.destroy().save())
+      .then(() => {
+        callback(null);
+      })
+      .catch((err) => {
+        callback(err);
+      });
+  },
   // create new trigger tied to user
   addTrigger(user, trigger, callback) {
     User.findById(user.id)
@@ -52,6 +89,7 @@ module.exports = {
         callback(err);
       });
   },
+
   // get triggers of given user
   getUserTriggers(user, callback) {
     User.findById(user.id)

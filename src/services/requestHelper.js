@@ -28,6 +28,33 @@ module.exports = {
         console.log('error logging out', err);
       });
   },
+  addSound: function (sound, callback) {
+    axios.post('/sound', trigger)
+      .then((response) => {
+        callback(response);
+      })
+      .catch((err) => {
+        console.log('error adding sound', err);
+      });
+  },
+  getSounds: function (callback) {
+    axios.get('/sound')
+      .then((response) => {
+        callback(response);
+      })
+      .catch((err) => {
+        console.log('error fetching sounds', err);
+      });
+  },
+  deleteSound: function (sound, callback) {
+    axios.delete('/sound', { data: { id: sound.id } })
+      .then((response) => {
+        callback(response);
+      })
+      .catch((err) => {
+        console.log('error deleting sound', err);
+      });
+  },
   addTrigger: function(trigger, callback) {
     axios.post('/trigger', trigger)
       .then((response) => {
