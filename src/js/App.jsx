@@ -37,6 +37,8 @@ class App extends Component {
       username: null,
       triggers: [],
       currentVol: 0,
+
+      triggerBoolean: true,
     };
     
     this.timeout = 1500;
@@ -192,6 +194,7 @@ class App extends Component {
         message: '',
       });
     }, this.timeout);
+
     if (this.sounds[this.clips[trigger.clip]]) {
       this.sounds[this.clips[trigger.clip]].play();
     }
@@ -201,6 +204,7 @@ class App extends Component {
     if (route === 'settings' && this.state.rendSettings) {
       route = 'mic';
     }
+
     this.setState({
       rendMic: route === 'mic',
       rendLogin: route === 'login',
@@ -241,16 +245,44 @@ class App extends Component {
     });
   }
 
-
-  getTriggers() {
-    util.getTriggers((res) => {
-      // make trigger data user friendly
-      const triggers = res.data.map((trigger) => this.convertTrigger(trigger));
-      this.setState({
-        triggers,
-      });
+  toggleTriggers(cb) {
+    this.setState( prevState => { 
+      console.log(`prevstate is: ${prevState.triggerBoolean}`);
+      return {triggerBoolean: !prevState.triggerBoolean}
+    }, () => {
+      console.log(`toggled trigger called, triggerBoolean is now: ${this.state.triggerBoolean}`);
+      cb();
     });
   }
+
+  hideTriggers(cb) {
+    console.log('called hide triggers');
+    this.setState({
+      triggers: [],
+    }, cb())
+  }
+
+  getTriggers() {
+    console.log('called get trigger. triggerBoolean is: ', this.state.triggerBoolean);
+    if(this.state.triggerBoolean){
+      util.getTriggers((res) => {
+        // make trigger data user friendly
+        const triggers = res.data.map((trigger) => this.convertTrigger(trigger));
+        this.setState({
+          triggers,
+        });
+      });
+    }
+  }
+
+  toggleAndGetTrigger() {
+    const context = this;
+    console.log('called toggle and get trigger:');
+    const boundGetTriggers = this.getTriggers.bind(this);
+    const boundToggleTriggers = this.toggleTriggers.bind(this, boundGetTriggers);
+    context.hideTriggers(boundToggleTriggers);
+  }
+
 
   addTrigger(trigger) {
     util.addTrigger(this.makeDbTrigger(trigger), (res) => {
@@ -270,6 +302,7 @@ class App extends Component {
     });
   }
 
+
   render() {
     const {isLoggedIn, rendMic, rendLogin, rendNewUser, rendSettings, username, triggers, message} = this.state;
     return (
@@ -282,6 +315,10 @@ class App extends Component {
           {!isLoggedIn && <button type="button" className="btn btn-lg btn-primary" onClick={this.routeButtonClick.bind(this, 'login')}>login</button>}
           {isLoggedIn && 
             <div>
+            <button type="button" className="btn btn-lg btn-toggle" onClick={this.toggleAndGetTrigger.bind(this)}>
+              {this.state.triggerBoolean ? 'Notifications: on' : 'Notifications: off'}
+            </button>
+            &nbsp;&nbsp;
             <button type="button" className="btn btn-lg btn-success" onClick={this.routeButtonClick.bind(this, 'settings')}>
               {this.state.rendSettings ? 'hide triggers' : 'add triggers'}
             </button>
