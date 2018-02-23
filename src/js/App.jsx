@@ -280,8 +280,6 @@ class App extends Component {
     const boundGetTriggers = this.getTriggers.bind(this);
     const boundToggleTriggers = this.toggleTriggers.bind(this, boundGetTriggers);
     context.hideTriggers(boundToggleTriggers);
-    // context.hideTriggers(context.toggleTriggers.bind(context));
-    // this.getTriggers();
   }
 
 
@@ -317,7 +315,9 @@ class App extends Component {
           {isLoggedIn && 
             <div>
             <button type="button" className="btn btn-lg btn-toggle" onClick={this.toggleAndGetTrigger.bind(this)}>
+              manage time
             </button>
+            &nbsp;&nbsp;
             <button type="button" className="btn btn-lg btn-success" onClick={this.routeButtonClick.bind(this, 'settings')}>
               {this.state.rendSettings ? 'hide triggers' : 'add triggers'}
             </button>
