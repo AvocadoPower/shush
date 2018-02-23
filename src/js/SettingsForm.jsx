@@ -73,8 +73,8 @@ class SettingsForm extends React.Component {
               <th>text message</th>
               <th>phone number</th>
               <th>audio clip</th>
-              <th>start time</th>
-              <th>end time</th>
+              <th>stop at</th>
+              <th>start at</th>
               <th>edit</th>
               <th>remove</th>
             </tr>
