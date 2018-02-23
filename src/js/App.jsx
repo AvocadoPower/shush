@@ -42,7 +42,8 @@ class App extends Component {
     };
     
     this.timeout = 1500;
-    this.triggerEvent = throttle(this.triggerEvent, this.timeout, { trailing: false });
+    this.triggerEvent = throttle(this.timedEventTrigger, this.timeout, { trailing: false });
+    // this.triggerEvent = throttle(this.triggerEvent, this.timeout, { trailing: false });
     this.sounds = {
       shush: new Audio(shushFile),
       pinDrop: new Audio(pinDropFile),
@@ -164,10 +165,42 @@ class App extends Component {
       }
     });
   }
+
+  timedEventTrigger(trigger, vol) {
+    const context = this;
+    //create conditional to fire depending on trigger times
+    if(trigger.listen_start && trigger.listen_stop){
+      let currentTime = util.getCurrentTime();
+      console.log(`current time is: ${currentTime}`)
+      if (trigger.listen_start < trigger.listen_stop) {
+        context.triggeredEvent(trigger, vol);
+      } else if (trigger.listen_start > trigger.listen_stop) {
+        context.triggeredEvent(trigger, vol);
+      } else{
+        context.triggeredEvent(trigger, vol);
+      }
+    } else {
+      context.triggeredEvent(trigger, vol);
+    }
+  }
   
   // fire off the trigger
   // sets displayed message and plays sound clip
-  triggerEvent(trigger, vol) {
+  triggeredEvent(trigger, vol) {
+
+    // //create conditional to fire depending on trigger times
+    // if(trigger.listen_start && trigger.listen_stop){
+    //   let currentTime = util.getCurrentTime();
+    //   console.log(`current time is: ${currentTime}`)
+    //   if (trigger.listen_start < trigger.listen_stop) {
+
+    //   } else if (trigger.listen_start > trigger.listen_stop) {
+
+    //   }
+    // } else{
+
+    // }
+
     // wrap in set time out, so doesn't get message continuously forever
     // check to see if trigger has a phone number
       // TODO: make good measure to see 'if phone'
