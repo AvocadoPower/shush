@@ -8,7 +8,9 @@ class SettingsForm extends React.Component {
       cGate: null,
       cMessage: null,
       cClip: null,
-      cPhone: null
+      cPhone: null,
+      cStart: null,
+      cEnd: null,
     };
   }
 
@@ -25,6 +27,18 @@ class SettingsForm extends React.Component {
   onPChange(e) {
     this.setState({
       cPhone: e.target.value
+    });
+  }
+  onSChange(e) {
+    console.log('changed start time: ', e.target.value)
+    this.setState({
+      cStart: e.target.value
+    });
+  }
+  onEChange(e) {
+    console.log('changed end time: ', e.target.value)
+    this.setState({
+      cEnd: e.target.value
     });
   }
   onCChange(e) {
@@ -117,7 +131,20 @@ class SettingsForm extends React.Component {
               <option>Sam says "back off"</option>
               <option>Sam says "get the F out my face"</option>
               <option>Sam says "shut the F up"</option>
+              <option>Upload your own mp3!</option>
             </select>
+          </div>
+          &nbsp;&nbsp;
+          <div className="form-group">
+            <label htmlFor="startTime">start time</label>
+            &nbsp;
+            <input type="time" className="form-control" id="startTime" placeholder="select" onChange={this.onSChange.bind(this)}/>
+          </div>
+          &nbsp;&nbsp;
+          <div className="form-group">
+            <label htmlFor="endTime">end time</label>
+            &nbsp;
+            <input type="time" className="form-control" id="endTime" placeholder="select" onChange={this.onEChange.bind(this)}/>
           </div>
           &nbsp;&nbsp;&nbsp;
           <br/>
