@@ -8,7 +8,9 @@ class SettingsForm extends React.Component {
       cGate: null,
       cMessage: null,
       cClip: null,
-      cPhone: null
+      cPhone: null,
+      cStart: null,
+      cStop: null,
     };
   }
 
@@ -27,25 +29,39 @@ class SettingsForm extends React.Component {
       cPhone: e.target.value
     });
   }
+  onSChange(e) {
+    console.log('changed start time: ', e.target.value)
+    this.setState({
+      cStart: e.target.value
+    });
+  }
+  onEChange(e) {
+    console.log('changed end time: ', e.target.value)
+    this.setState({
+      cStop: e.target.value
+    });
+  }
   onCChange(e) {
     this.setState({
       cClip: e.target.value
     });
   }
 
-  submitTrigger(gate, text, phone_number, clip) {
+  submitTrigger(gate, text, phone_number, clip, listen_start, listen_stop) {
     const newTrig = {
       gate: gate,
       message: text,
       phone_number: phone_number,
       clip: clip,
+      listen_start: listen_start, 
+      listen_stop: listen_stop,
     }
     console.log('submitting trigger\n', newTrig)
     this.props.addTrigger(newTrig);
   }
   render() {
     const { triggers , addTrigger , editTrigger , deleteTrigger} = this.props;
-    const { cGate, cMessage, cPhone, cClip} = this.state;
+    const { cGate, cMessage, cPhone, cClip, cStart, cStop} = this.state;
     return (
       <div>
         <table className="table">
@@ -57,6 +73,8 @@ class SettingsForm extends React.Component {
               <th>text message</th>
               <th>phone number</th>
               <th>audio clip</th>
+              <th>start time</th>
+              <th>end time</th>
               <th>edit</th>
               <th>remove</th>
             </tr>
@@ -117,7 +135,20 @@ class SettingsForm extends React.Component {
               <option>Sam says "back off"</option>
               <option>Sam says "get the F out my face"</option>
               <option>Sam says "shut the F up"</option>
+              <option>Upload your own mp3!</option>
             </select>
+          </div>
+          &nbsp;&nbsp;
+          <div className="form-group">
+            <label htmlFor="startTime">start time</label>
+            &nbsp;
+            <input type="time" className="form-control" id="startTime" placeholder="select" onChange={this.onSChange.bind(this)}/>
+          </div>
+          &nbsp;&nbsp;
+          <div className="form-group">
+            <label htmlFor="endTime">end time</label>
+            &nbsp;
+            <input type="time" className="form-control" id="endTime" placeholder="select" onChange={this.onEChange.bind(this)}/>
           </div>
           &nbsp;&nbsp;&nbsp;
           <br/>
@@ -128,7 +159,7 @@ class SettingsForm extends React.Component {
           }
           {cGate && cMessage && cClip &&
             <fieldset>
-              <button type="button" className="btn btn-success" onClick={this.submitTrigger.bind(this, cGate, cMessage, cPhone, cClip)}>add trigger</button>
+              <button type="button" className="btn btn-success" onClick={this.submitTrigger.bind(this, cGate, cMessage, cPhone, cClip, cStart, cStop)}>add trigger</button>
             </fieldset>
           }
         </div>
