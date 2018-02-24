@@ -108,7 +108,7 @@ module.exports = {
     // get curent minutes from date 
     let currentMinutes = currentDate.getMinutes();
     let minutesString = currentMinutes.toString();
-    currentMinutes = minutesString.length === 2 ? minutesString : `0${MinutesString}`;
+    currentMinutes = minutesString.length === 2 ? minutesString : `0${minutesString}`;
     // get curent seconds from date 
     let currentSeconds = currentDate.getSeconds();
     let secondsString = currentSeconds.toString();
