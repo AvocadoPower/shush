@@ -82,7 +82,7 @@ module.exports = {
         console.log('error updating trigger', err);
       });
   },
-  deleteTrigger: function(trigger, callback) {
+  deleteTrigger: function (trigger, callback) {
     axios.delete('/trigger', { data: { id: trigger.id } })
       .then((response) => {
         callback(response);
@@ -117,4 +117,12 @@ module.exports = {
     let currentTime = `${currentHours}:${currentMinutes}:${currentSeconds}`;
     return currentTime;
   },
+  uploadSound: function (sound){
+    axios.post('https://api.cloudinary.com/v1_1/avocadopower/video/upload', {
+      params: {
+        file: sound,
+      upload_preset: 'phtagbi6',
+      }
+    });
+  },  
 }
