@@ -28,15 +28,15 @@ module.exports = {
         console.log('error logging out', err);
       });
   },
-  addSound: function (sound, callback) {
-    axios.post('/sound', trigger)
-      .then((response) => {
-        callback(response);
-      })
-      .catch((err) => {
-        console.log('error adding sound', err);
-      });
-  },
+  // addSound: function (sound, callback) {
+  //   axios.post('/sound', trigger)
+  //     .then((response) => {
+  //       callback(response);
+  //     })
+  //     .catch((err) => {
+  //       console.log('error adding sound', err);
+  //     });
+  // },
   getSounds: function (callback) {
     axios.get('/sound')
       .then((response) => {
@@ -99,6 +99,14 @@ module.exports = {
       }
     });
   },
+  uploadSound: function (sound){
+    axios.post('https://api.cloudinary.com/v1_1/avocadopower/video/upload', {
+      params: {
+        file: sound,
+        upload_preset: 'phtagbi6',
+      }
+    });
+  },  
   getCurrentTime: function () {
     let currentDate = new Date();
     // get current hours from date
@@ -117,12 +125,4 @@ module.exports = {
     let currentTime = `${currentHours}:${currentMinutes}:${currentSeconds}`;
     return currentTime;
   },
-  uploadSound: function (sound){
-    axios.post('https://api.cloudinary.com/v1_1/avocadopower/video/upload', {
-      params: {
-        file: sound,
-      upload_preset: 'phtagbi6',
-      }
-    });
-  },  
 }
