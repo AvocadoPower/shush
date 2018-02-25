@@ -46,6 +46,16 @@ class SettingsForm extends React.Component {
       cClip: e.target.value
     });
   }
+  onFChange(e) {
+    console.log(e.target.files[0].name);
+    console.log(e.target.files);
+    let soundUrl = URL.createObjectURL(e.target.files[0])
+    let clip = new Audio(soundUrl);
+    clip.play();
+    // this.setState({
+    //   cClip: e.target.value
+    // });
+  }
 
   submitTrigger(gate, text, phone_number, clip, listen_start, listen_stop) {
     const newTrig = {
@@ -74,7 +84,7 @@ class SettingsForm extends React.Component {
               <th>phone number</th>
               <th>audio clip</th>
               <th>stop at</th>
-              <th>start at</th>
+              <th>resume at</th>
               <th>edit</th>
               <th>remove</th>
             </tr>
@@ -96,7 +106,7 @@ class SettingsForm extends React.Component {
         <br/>
         <div className="form-inline">
           <div className="form-group">
-            <label htmlFor="newNoiseLimit">noise limit</label>
+            <label htmlFor="newNoiseLimit">noise limit*</label>
             &nbsp;
             <select className="form-control" onChange={this.onGChange.bind(this)}>
               <option value="">select limit</option>
@@ -110,7 +120,7 @@ class SettingsForm extends React.Component {
           </div>
           &nbsp;&nbsp;
           <div className="form-group">
-            <label htmlFor="newMessage">text message</label>
+            <label htmlFor="newMessage">text message*</label>
             &nbsp;
             <input type="text" className="form-control" id="newMessage" placeholder="message" onChange={this.onMChange.bind(this)}/>
           </div>
@@ -122,7 +132,7 @@ class SettingsForm extends React.Component {
           </div>
           &nbsp;&nbsp;
           <div className="form-group">
-            <label htmlFor="newAudioClip">audio clip</label>
+            <label htmlFor="newAudioClip">audio clip*</label>
             &nbsp;
             <select className="form-control" onChange={this.onCChange.bind(this)}>
               <option value="">select clip</option>
@@ -140,15 +150,22 @@ class SettingsForm extends React.Component {
           </div>
           &nbsp;&nbsp;
           <div className="form-group">
-            <label htmlFor="startTime">start time</label>
+            <label htmlFor="startTime">stop time</label>
             &nbsp;
             <input type="time" className="form-control" id="startTime" placeholder="select" onChange={this.onSChange.bind(this)}/>
           </div>
           &nbsp;&nbsp;
           <div className="form-group">
-            <label htmlFor="endTime">end time</label>
+            <label htmlFor="endTime">resume time</label>
             &nbsp;
             <input type="time" className="form-control" id="endTime" placeholder="select" onChange={this.onEChange.bind(this)}/>
+          </div>
+          &nbsp;&nbsp;
+
+          <div className="form-group">
+            <label htmlFor="mp3upload">upload your own mp3</label>
+            &nbsp;
+            <input id="mp3upload" type="file" accept=".mp3" onChange={this.onFChange.bind(this)}></input>
           </div>
           &nbsp;&nbsp;&nbsp;
           <br/>
