@@ -13,6 +13,9 @@ const morgan = require('morgan');
 const { User } = require('./db/config');
 const twilio = require('twilio')(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
 
+const fileUpload = require('express-fileupload');
+
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -25,6 +28,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(cookieParser());
+
+app.use(fileUpload());
 
 // handle /user route
 app.get('/user', util.getUsers);

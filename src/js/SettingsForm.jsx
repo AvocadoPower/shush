@@ -1,5 +1,6 @@
 import React from 'react';
 import TriggerRow from './TriggerRow.jsx'
+import axios from 'axios'
 
 class SettingsForm extends React.Component {
   constructor(props) {
@@ -47,14 +48,18 @@ class SettingsForm extends React.Component {
     });
   }
   onFChange(e) {
-    console.log(e.target.files[0].name);
-    console.log(e.target.files);
-    let soundUrl = URL.createObjectURL(e.target.files[0])
-    let clip = new Audio(soundUrl);
-    clip.play();
-    // this.setState({
-    //   cClip: e.target.value
-    // });
+    const formData = new FormData();
+    const file = e.target.files[0]
+    const fileReader = new FileReader();
+    fileReader.onload = function(event){
+      formData.append('arrayBuffer', event.target.result);
+      axios.post('/sound', formData)
+      // axios.post('/sounds', event.target.result)
+      .then(response => {console.log(`got response: ${response}`)})
+      .catch((err) => {console.log(`got err: ${err} in axios request in seetingsForm.js`)});
+    }
+    fileReader.readAsArrayBuffer(file);
+ 
   }
 
   submitTrigger(gate, text, phone_number, clip, listen_start, listen_stop) {
