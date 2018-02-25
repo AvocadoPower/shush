@@ -42,7 +42,8 @@ class App extends Component {
     };
     
     this.timeout = 1500;
-    this.triggerEvent = throttle(this.triggerEvent, this.timeout, { trailing: false });
+    this.triggerEvent = throttle(this.timedEventTrigger, this.timeout, { trailing: false });
+    // this.triggerEvent = throttle(this.triggerEvent, this.timeout, { trailing: false });
     this.sounds = {
       shush: new Audio(shushFile),
       pinDrop: new Audio(pinDropFile),
@@ -164,13 +165,36 @@ class App extends Component {
       }
     });
   }
+
+  timedEventTrigger(trigger, vol) {
+    const context = this;
+    //create conditional to fire depending on trigger times
+    if(trigger.listen_start && trigger.listen_stop){
+      let currentTime = util.getCurrentTime();
+      // if times are checking same day, don't allow event to trigger between the times
+      if (trigger.listen_start < trigger.listen_stop) {
+        if(currentTime < trigger.listen_start || currentTime > trigger.listen_stop){
+          context.triggeredEvent(trigger, vol);
+        }
+      // if times span 12:00 am , don't allow event to trigger between the times
+      } else if (trigger.listen_start > trigger.listen_stop) {
+        if(currentTime < trigger.listen_start && currentTime > trigger.listen_stop){
+          context.triggeredEvent(trigger, vol);
+        }
+      } else{
+        context.triggeredEvent(trigger, vol);
+      }
+    } else {
+      context.triggeredEvent(trigger, vol);
+    }
+  }
   
   // fire off the trigger
   // sets displayed message and plays sound clip
-  triggerEvent(trigger, vol) {
-    // wrap in set time out, so doesn't get message continuously forever
+  triggeredEvent(trigger, vol) {
+
+    // TODO: wrap in set time out, so doesn't get message continuously forever
     // check to see if trigger has a phone number
-      // TODO: make good measure to see 'if phone'
     if(trigger.phone_number) {
       // if so, check format
       if(!isNaN(parseInt(trigger.phone_number)) && trigger.phone_number.toString().length === 10){
@@ -182,8 +206,6 @@ class App extends Component {
         console.log('Sorry, we are having a difficult time understanding your phone number. Sometimes people forget to give all 10 digits or accidentally type non numeric characters. The format should be 0000000000');
 
       }
-    } else{
-      console.log('no trigger.phone, sorry');
     }
 
     this.setState({
@@ -247,23 +269,19 @@ class App extends Component {
 
   toggleTriggers(cb) {
     this.setState( prevState => { 
-      console.log(`prevstate is: ${prevState.triggerBoolean}`);
       return {triggerBoolean: !prevState.triggerBoolean}
     }, () => {
-      console.log(`toggled trigger called, triggerBoolean is now: ${this.state.triggerBoolean}`);
       cb();
     });
   }
 
   hideTriggers(cb) {
-    console.log('called hide triggers');
     this.setState({
       triggers: [],
     }, cb())
   }
 
   getTriggers() {
-    console.log('called get trigger. triggerBoolean is: ', this.state.triggerBoolean);
     if(this.state.triggerBoolean){
       util.getTriggers((res) => {
         // make trigger data user friendly
@@ -277,7 +295,6 @@ class App extends Component {
 
   toggleAndGetTrigger() {
     const context = this;
-    console.log('called toggle and get trigger:');
     const boundGetTriggers = this.getTriggers.bind(this);
     const boundToggleTriggers = this.toggleTriggers.bind(this, boundGetTriggers);
     context.hideTriggers(boundToggleTriggers);
