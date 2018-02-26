@@ -74,25 +74,16 @@ handleDrop (files) {
         const fileURL = data.url;
         const fileName = data.original_filename;
         console.log(fileURL, fileName);
-        return soundInfo = {
+        const soundInfo = {
           name: fileName,
           url: fileURL,
         }
-      })
-      .then((soundInfo) => {axios.post('/sound', soundInfo)})
-      .catch((err) => {console.error(err)});
-  
+        return axios.post('/sound', soundInfo)
+      }).catch((err) => {console.log('it\'s mee', err)});
+    })
+  }
 
-  // Once all the files are uploaded
-  // axios
-  //   .all(uploaders)
-  //   .then((response) => {
-  //     // ... perform after upload is successful operation
-  //     console.log(response)
-  //   }).catch((err) => {console.log(err)});
-}
-
-  submitTrigger(gate, text, phone_number, clip, listen_start, listen_stop) {
+  submitTrigger (gate, text, phone_number, clip, listen_start, listen_stop) {
     const newTrig = {
       gate: gate,
       message: text,
