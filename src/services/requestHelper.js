@@ -35,15 +35,15 @@ module.exports = {
         console.log('error logging out', err);
       });
   },
-  // addSound: function (sound, callback) {
-  //   axios.post('/sound', trigger)
-  //     .then((response) => {
-  //       callback(response);
-  //     })
-  //     .catch((err) => {
-  //       console.log('error adding sound', err);
-  //     });
-  // },
+  addSound: function (sound, callback) {
+    axios.post('/sound', sound)
+      .then((response) => {
+        callback(response);
+      })
+      .catch((err) => {
+        console.log('error adding sound', err);
+      });
+  },
   getSounds: function (callback) {
     axios.get('/sound')
       .then((response) => {
