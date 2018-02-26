@@ -46,6 +46,7 @@ module.exports = {
   getSounds: function (callback) {
     axios.get('/sound')
       .then((response) => {
+        console.log('HHHHEYYYYYYYYYYY', response);
         callback(response);
       })
       .catch((err) => {
