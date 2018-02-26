@@ -132,7 +132,6 @@ handleDrop (files) {
         <table class="table">
           <caption>create a new trigger</caption>
         </table>
-        <br/>
         <div className="form-inline">
           <div className="form-group">
             <label htmlFor="newNoiseLimit">noise limit*</label>
