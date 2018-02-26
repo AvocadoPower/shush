@@ -82,11 +82,9 @@ app.get('/trigger', util.getUserTriggers);
 app.post('/trigger', util.addTrigger);
 app.put('/trigger', util.updateTrigger);
 app.delete('/trigger', util.deleteTrigger);
-// TODO: handle trigger route here???
 
 // handle /sms route:
 app.post('/sms', (req, res) => {
-  console.log('hit app.post(/sms)!', req.body);
   // successfully send twilio message:
   twilio.messages.create(
     {
