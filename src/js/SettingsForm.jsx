@@ -32,13 +32,11 @@ class SettingsForm extends React.Component {
     });
   }
   onSChange(e) {
-    console.log('changed start time: ', e.target.value)
     this.setState({
       cStart: e.target.value
     });
   }
   onEChange(e) {
-    console.log('changed end time: ', e.target.value)
     this.setState({
       cStop: e.target.value
     });
@@ -78,7 +76,8 @@ handleDrop (files) {
           name: fileName,
           url: fileURL,
         }
-        return axios.post('/sound', soundInfo)
+        // return axios.post('/sound', soundInfo)
+        return axios.post('/sound', soundInfo);
       }).catch((err) => {console.log('it\'s mee', err)});
     })
   }

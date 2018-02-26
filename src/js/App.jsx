@@ -229,13 +229,11 @@ class App extends Component {
     } else if (this.sounds[trigger.clip]) {
         // TODO: call play on user audio url:
       this.sounds[trigger.clip].play();
-      console.log(`trigger.clip is: ${trigger.clip}`);
     } else if (trigger.clip) {
       // TODO: get correct url from db
-      const mp3Url = '';
-      const fakeDataUrl = '';
+      const mp3Url = this.props.soundUrlMap[trigger.clip];
       // add audio with html to this.sounds
-      this.sounds[trigger.clip] = new Audio(fakeDataUrl);
+      this.sounds[trigger.clip] = new Audio(mp3Url);
     }
     
   }
@@ -325,14 +323,10 @@ class App extends Component {
         const triggers = res.data.map((trigger) => this.convertTrigger(trigger));
         triggers.forEach((trigger) => {
           if(!context.sounds[context.clips[trigger.clip]] && trigger.clip){
-            console.log(trigger.clip);
-            // TODO: get correct url from db:
             const url = context.state.soundUrls[trigger.clip];
-            const fakeDataUrl = '';
-            context.sounds[trigger.clip] = new Audio(fakeDataUrl);
+            context.sounds[trigger.clip] = new Audio(url);
           }
         })
-        console.log('pretty triggers is: ', triggers);
         this.setState({
           triggers,
         });
@@ -351,7 +345,6 @@ class App extends Component {
   addTrigger(trigger) {
     util.addTrigger(this.makeDbTrigger(trigger), (res) => {
       // TODO: delete console.log:
-      console.log('currently adding to trigger: ', trigger);
       this.getTriggers();
     });
   }

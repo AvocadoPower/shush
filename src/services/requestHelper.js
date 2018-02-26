@@ -2,9 +2,6 @@ require('dotenv').config();
 const axios = require('axios');
 // const bcrypt = require('bcrypt');
 
-const CLOUDINARY_KEY = process.env.CLOUDINARY_API_KEY;
-const CLOUDINARY_SECRET = process.env.CLOUDINARY_API_SECRET;
-
 
 module.exports = {
   userSignup: function(user, callback) {
@@ -46,7 +43,6 @@ module.exports = {
   getSounds: function (callback) {
     axios.get('/sound')
       .then((response) => {
-        console.log('HHHHEYYYYYYYYYYY', response);
         callback(response);
       })
       .catch((err) => {
