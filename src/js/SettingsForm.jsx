@@ -160,6 +160,7 @@ handleDrop (files) {
             <input type="text" className="form-control" id="phoneNumber" placeholder="phone number" onChange={this.onPChange.bind(this)}/>
           </div>
           &nbsp;&nbsp;
+          <br/>
           <div className="form-group">
             <label htmlFor="newAudioClip">audio clip*</label>
             &nbsp;
@@ -192,12 +193,11 @@ handleDrop (files) {
             <input type="time" className="form-control" id="endTime" placeholder="select" onChange={this.onEChange.bind(this)}/>
           </div>
           &nbsp;&nbsp;
-
-          <div className="form-group">
-            <label htmlFor="mp3upload">upload your own mp3</label>
+          <div className="form-group" >
+            <label htmlFor = "mp3upload">upload an mp3</label>
             &nbsp;
-            <Dropzone onDrop = { this.handleDrop.bind(this) } multiple accept = ".mp3"> <p>Drop your files or click here to upload</p> </Dropzone>
-          </div>
+            <Dropzone className="btn btn-default" onDrop = { this.handleDrop.bind(this) } multiple accept = ".mp3"> <p>click here or drag & drop</p> </Dropzone>
+            </div>
           &nbsp;&nbsp;&nbsp;
           <br/>
           {(!cGate || !cMessage || !cClip) && 
