@@ -41,6 +41,8 @@ class App extends Component {
       triggerBoolean: true,
 
       userMp3s: [],
+      soundUrls: {},
+
     };
     
     this.timeout = 1500;
@@ -58,7 +60,6 @@ class App extends Component {
       shutTheFUp: new Audio(shutTheFUpFile),
     };
 
-    this.soundUrls = {};
     // convert trigger data to display these values
     // possibly create a duplicate triggers array with converted values
     this.gates = {
@@ -259,8 +260,8 @@ class App extends Component {
         isLoggedIn: true,
       });
       this.routeButtonClick('mic');
-      this.getSoundNames();
-      this.getTriggers();
+      this.getSoundNames()
+      // this.getTriggers();
       
     });
   }
@@ -301,12 +302,18 @@ class App extends Component {
   }
 
   getSoundNames() {
-    const state = this.state;
+    const context = this;
     util.getSounds((res) => {
+      const soundUrlMap = {};
+      res.data.forEach((sound) => {
+        soundUrlMap[sound.name] = sound.url
+      });
       const mp3s = res.data.map((sound) => sound.name);
       this.setState({
         userMp3s: mp3s,
-      })
+        soundUrls: soundUrlMap,
+      });
+      this.getTriggers();
     });
   }
 
@@ -320,7 +327,7 @@ class App extends Component {
           if(!context.sounds[context.clips[trigger.clip]] && trigger.clip){
             console.log(trigger.clip);
             // TODO: get correct url from db:
-            const url = '';
+            const url = context.state.soundUrls[trigger.clip];
             const fakeDataUrl = '';
             context.sounds[trigger.clip] = new Audio(fakeDataUrl);
           }
