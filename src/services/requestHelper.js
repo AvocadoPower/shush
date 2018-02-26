@@ -1,5 +1,6 @@
 require('dotenv').config();
 const axios = require('axios');
+const moment = require('moment');
 // const bcrypt = require('bcrypt');
 
 
@@ -116,21 +117,7 @@ module.exports = {
     });
   },
   getCurrentTime: function () {
-    let currentDate = new Date();
-    // get current hours from date
-    let currentHours = currentDate.getHours();
-    let hoursString = currentHours.toString();
-    currentHours = hoursString.length === 2 ? hoursString : `0${hoursString}`;
-    // get curent minutes from date 
-    let currentMinutes = currentDate.getMinutes();
-    let minutesString = currentMinutes.toString();
-    currentMinutes = minutesString.length === 2 ? minutesString : `0${minutesString}`;
-    // get curent seconds from date 
-    let currentSeconds = currentDate.getSeconds();
-    let secondsString = currentSeconds.toString();
-    currentSeconds = secondsString.length === 2 ? secondsString : `0${secondsString}`;
-    // concat hours mins and secs to get current time
-    let currentTime = `${currentHours}:${currentMinutes}:${currentSeconds}`;
+    let currentTime = moment().format('HH:mm:ss');
     return currentTime;
   },
 }
