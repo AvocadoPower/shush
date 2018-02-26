@@ -48,6 +48,7 @@ class SettingsForm extends React.Component {
   }
 
 handleDrop (files) {
+  const context = this;
   // Push all the axios request promise into a single array
   const uploaders = files.map(file => {
     // Initial FormData
@@ -77,7 +78,8 @@ handleDrop (files) {
           url: fileURL,
         }
         // return axios.post('/sound', soundInfo)
-        return axios.post('/sound', soundInfo);
+        return axios.post('/sound', soundInfo)
+          .then(() => {context.props.getSounds()});
       }).catch((err) => {console.log('it\'s mee', err)});
     })
   }
@@ -91,7 +93,7 @@ handleDrop (files) {
       listen_start: listen_start, 
       listen_stop: listen_stop,
     }
-    console.log('submitting trigger\n', newTrig)
+    // console.log('submitting trigger\n', newTrig)
     this.props.addTrigger(newTrig);
   }
   render() {
@@ -192,7 +194,7 @@ handleDrop (files) {
           <div className="form-group">
             <label htmlFor="mp3upload">upload your own mp3</label>
             &nbsp;
-            <Dropzone onDrop = { this.handleDrop } multiple accept = ".mp3"> <p>Drop your files or click here to upload</p> </Dropzone>
+            <Dropzone onDrop = { this.handleDrop.bind(this) } multiple accept = ".mp3"> <p>Drop your files or click here to upload</p> </Dropzone>
           </div>
           &nbsp;&nbsp;&nbsp;
           <br/>
