@@ -129,7 +129,9 @@ handleDrop (files) {
             ))}
           </tbody>
         </table>
-        <caption>create a new trigger</caption>
+        <table class="table">
+          <caption>create a new trigger</caption>
+        </table>
         <br/>
         <div className="form-inline">
           <div className="form-group">
