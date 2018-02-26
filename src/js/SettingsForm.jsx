@@ -1,6 +1,7 @@
 import React from 'react';
 import TriggerRow from './TriggerRow.jsx'
 import axios from 'axios'
+import Dropzone from 'react-dropzone'
 
 class SettingsForm extends React.Component {
   constructor(props) {
@@ -47,10 +48,13 @@ class SettingsForm extends React.Component {
       cClip: e.target.value
     });
   }
-  onFChange(e) {
-    const context = this;
-    // when a file is selected, convert it to buffer array and send to server
+
+handleDrop (files) {
+  // Push all the axios request promise into a single array
+  const uploaders = files.map(file => {
+    // Initial FormData
     const formData = new FormData();
+<<<<<<< HEAD
     const file = e.target.files[0]
     if(file){
       const fileReader = new FileReader();
@@ -74,9 +78,38 @@ class SettingsForm extends React.Component {
       console.log('no mp3 was selected');
     }
  
+=======
+    formData.append("file", file);
+    // formData.append("tags", `codeinfuse, medium, gist`);
+    formData.append("upload_preset", "phtagbi6"); // Replace the preset name with your own
+    formData.append("api_key", ""); // Replace API key with your own Cloudinary key
+    formData.append("timestamp", (Date.now() / 1000) | 0);
+
+    // Make an AJAX upload request using Axios (replace Cloudinary URL below with
+    // your own)
+    return axios
+      .post("https://api.cloudinary.com/v1_1/avocadopower/video/upload", formData, {
+      headers: {
+        "X-Requested-With": "XMLHttpRequest"
+      }
+    })
+      .then((response) => {
+        const data = response.data;
+        const secURL = data.secure_url; // You should store this URL for future references in your app
+        const fileURL = data.url;
+        const fileName = data.original_filename;
+        console.log(fileURL, fileName);
+        const soundInfo = {
+          name: fileName,
+          url: fileURL,
+        }
+        return axios.post('/sound', soundInfo)
+      }).catch((err) => {console.log('it\'s mee', err)});
+    })
+>>>>>>> 3120464c14294b4207a18efd42c1b362ea89e686
   }
 
-  submitTrigger(gate, text, phone_number, clip, listen_start, listen_stop) {
+  submitTrigger (gate, text, phone_number, clip, listen_start, listen_stop) {
     const newTrig = {
       gate: gate,
       message: text,
@@ -186,7 +219,7 @@ class SettingsForm extends React.Component {
           <div className="form-group">
             <label htmlFor="mp3upload">upload your own mp3</label>
             &nbsp;
-            <input id="mp3upload" type="file" accept=".mp3" onChange={this.onFChange.bind(this)}></input>
+            <Dropzone onDrop = { this.handleDrop } multiple accept = ".mp3"> <p>Drop your files or click here to upload</p> </Dropzone>
           </div>
           &nbsp;&nbsp;&nbsp;
           <br/>

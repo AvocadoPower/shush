@@ -5,9 +5,10 @@
 require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
-const request = require('request');
+// const request = require('request');
 const bodyParser = require('body-parser');
 const util = require('./lib/requestHelper');
+const services = require('./src/services/requestHelper');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const { User } = require('./db/config');
@@ -71,7 +72,7 @@ app.get('/logout', (req, res) => {
   }
 });
 
-// handle sound route
+// handle /sound route
 app.get('/sound', util.getUserSounds);
 app.post('/sound', util.addSound);
 app.delete('/sound', util.deleteSound);

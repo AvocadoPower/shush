@@ -43,7 +43,7 @@ module.exports = {
   addSound(user, sound, callback) {
     User.findById(user.id)
       .then((user) => {
-        sound.id_user = user.id;
+        sound.user_id = user.id;
         return Sound.create(sound);
       })
       .then((newSound) => {
