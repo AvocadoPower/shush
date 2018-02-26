@@ -44,7 +44,13 @@ module.exports = {
     User.findById(user.id)
       .then((user) => {
         sound.id_user = user.id;
-        return Sound.create(sound);
+        // return Sound.create(sound);
+        return Sound.findOne({where: {name: sound.name, id_user: sound.id_user}})
+
+        // sound);
+      })
+      .then(function(foundSound) {
+        return foundSound ? foundSound.update(sound) : Sound.create(sound);
       })
       .then((newSound) => {
         callback(null, newSound);
