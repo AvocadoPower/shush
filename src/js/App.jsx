@@ -41,6 +41,8 @@ class App extends Component {
       triggerBoolean: true,
 
       userMp3s: [],
+      soundUrls: {},
+
     };
     
     this.timeout = 1500;
@@ -57,6 +59,7 @@ class App extends Component {
       getOutMyFace: new Audio(getOutMyFaceFile),
       shutTheFUp: new Audio(shutTheFUpFile),
     };
+
     // convert trigger data to display these values
     // possibly create a duplicate triggers array with converted values
     this.gates = {
@@ -143,7 +146,8 @@ class App extends Component {
   makeDbTrigger(trigger) {
     let dbTrigger = Object.assign({}, trigger);
     dbTrigger.gate = this.gates[trigger.gate];
-    dbTrigger.clip = this.clips[trigger.clip];
+    dbTrigger.clip = this.clips[trigger.clip] || trigger.clip;
+    // dbTrigger.clip = this.clips[trigger.clip];
     return dbTrigger;
   }
 
@@ -195,6 +199,7 @@ class App extends Component {
   // sets displayed message and plays sound clip
   triggeredEvent(trigger, vol) {
 
+
     // TODO: wrap in set time out, so doesn't get message continuously forever
     // check to see if trigger has a phone number
     if(trigger.phone_number) {
@@ -221,7 +226,16 @@ class App extends Component {
 
     if (this.sounds[this.clips[trigger.clip]]) {
       this.sounds[this.clips[trigger.clip]].play();
+    } else if (this.sounds[trigger.clip]) {
+        // TODO: call play on user audio url:
+      this.sounds[trigger.clip].play();
+    } else if (trigger.clip) {
+      // TODO: get correct url from db
+      const mp3Url = this.props.soundUrlMap[trigger.clip];
+      // add audio with html to this.sounds
+      this.sounds[trigger.clip] = new Audio(mp3Url);
     }
+    
   }
 
   routeButtonClick(route) {
@@ -244,8 +258,8 @@ class App extends Component {
         isLoggedIn: true,
       });
       this.routeButtonClick('mic');
-      this.getSoundNames();
-      this.getTriggers();
+      this.getSoundNames()
+      // this.getTriggers();
       
     });
   }
@@ -286,20 +300,33 @@ class App extends Component {
   }
 
   getSoundNames() {
-    const state = this.state;
+    const context = this;
     util.getSounds((res) => {
+      const soundUrlMap = {};
+      res.data.forEach((sound) => {
+        soundUrlMap[sound.name] = sound.url
+      });
       const mp3s = res.data.map((sound) => sound.name);
       this.setState({
         userMp3s: mp3s,
-      })
+        soundUrls: soundUrlMap,
+      });
+      this.getTriggers();
     });
   }
 
   getTriggers() {
+    const context = this;
     if(this.state.triggerBoolean){
       util.getTriggers((res) => {
         // make trigger data user friendly
         const triggers = res.data.map((trigger) => this.convertTrigger(trigger));
+        triggers.forEach((trigger) => {
+          if(!context.sounds[context.clips[trigger.clip]] && trigger.clip){
+            const url = context.state.soundUrls[trigger.clip];
+            context.sounds[trigger.clip] = new Audio(url);
+          }
+        })
         this.setState({
           triggers,
         });
@@ -317,6 +344,7 @@ class App extends Component {
 
   addTrigger(trigger) {
     util.addTrigger(this.makeDbTrigger(trigger), (res) => {
+      // TODO: delete console.log:
       this.getTriggers();
     });
   }

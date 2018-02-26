@@ -1,10 +1,6 @@
 require('dotenv').config();
 const axios = require('axios');
 // const bcrypt = require('bcrypt');
-const sha1 = require('js-sha1');
-
-const CLOUDINARY_KEY = process.env.CLOUDINARY_API_KEY;
-const CLOUDINARY_SECRET = process.env.CLOUDINARY_API_SECRET;
 
 
 module.exports = {
