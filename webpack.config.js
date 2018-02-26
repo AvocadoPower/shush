@@ -19,6 +19,9 @@ module.exports = {
     path: paths.DIST,
     filename: 'app.bundle.js',
   },
+node : {
+  fs: "empty"
+},
   // Tell webpack to use html plugin
   // index.html is used as a template in which it'll inject bundled app.
   plugins: [

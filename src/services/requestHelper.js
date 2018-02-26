@@ -1,4 +1,11 @@
+require('dotenv').config();
 const axios = require('axios');
+// const bcrypt = require('bcrypt');
+const sha1 = require('js-sha1');
+
+const CLOUDINARY_KEY = process.env.CLOUDINARY_API_KEY;
+const CLOUDINARY_SECRET = process.env.CLOUDINARY_API_SECRET;
+
 
 module.exports = {
   userSignup: function(user, callback) {
@@ -29,7 +36,7 @@ module.exports = {
       });
   },
   addSound: function (sound, callback) {
-    axios.post('/sound', trigger)
+    axios.post('/sound', sound)
       .then((response) => {
         callback(response);
       })
@@ -82,7 +89,7 @@ module.exports = {
         console.log('error updating trigger', err);
       });
   },
-  deleteTrigger: function(trigger, callback) {
+  deleteTrigger: function (trigger, callback) {
     axios.delete('/trigger', { data: { id: trigger.id } })
       .then((response) => {
         callback(response);
@@ -97,6 +104,19 @@ module.exports = {
         message: message,
         phone: phone,
       }
+    });
+  },
+  uploadSound: function (sound, callback){
+    console.log(sound);
+    const timestamp = Math.round(new Date().getTime() / 1000);
+    const signature = `pubic_id=sample_sound&timestamp=${timestamp}${CLOUDINARY_SECRET}`;
+    const code = sha1(signature);
+
+    axios.post(`https://api.cloudinary.com/v1_1/avocadopower/video/upload?file=${sound}&timestamp=${timestamp}&api_key=${CLOUDINARY_KEY}&signature=${code}`)
+    .then((response) => {
+     callback(response);
+    }).catch(error => {
+      console.error(error);
     });
   },
   getCurrentTime: function () {

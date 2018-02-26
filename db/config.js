@@ -64,9 +64,8 @@ const Sound = sequelize.define('sound', {
   url: Sequelize.STRING,
 });
 
-Sound.belongsTo(Trigger, { foreignKey: 'clip_id' });
 Sound.belongsTo(User, { foreignKey: 'user_id' });
-Trigger.hasOne(Sound, { foreignKey: 'clip_id' });
+Trigger.hasOne(Sound, { foreignKey: 'id' });
 User.hasMany(Sound, { foreignKey: 'user_id' });
 
 // define event
