@@ -34,8 +34,6 @@ User.prototype.validPassword = function (password) {
   return bcrypt.compare(password, this.password);
 };
 
-User.sync();
-
 // define moment
 const Moment = sequelize.define('moment', {
   dbChange: Sequelize.FLOAT,
@@ -64,9 +62,10 @@ const Sound = sequelize.define('sound', {
   url: Sequelize.STRING,
 });
 
-Sound.belongsTo(User, { foreignKey: 'user_id' });
-Trigger.hasOne(Sound, { foreignKey: 'id' });
-User.hasMany(Sound, { foreignKey: 'user_id' });
+Sound.belongsTo(User, { foreignKey: 'id_user' });
+// Sound.belongsTo(Trigger, { foreignKey: 'id_user' });
+// Trigger.hasOne(Sound, { foreignKey: 'id_user' });
+User.hasMany(Sound, { foreignKey: 'id_user' });
 
 // define event
 const Event = sequelize.define('event', {
