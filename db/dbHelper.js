@@ -8,6 +8,7 @@ const {
   Moment,
   Trigger,
   Event,
+  Sound,
 } = require('./config');
 
 module.exports = {
@@ -56,7 +57,8 @@ module.exports = {
   // get sounds of given user
   getUserSounds(user, callback) {
     User.findById(user.id)
-      .then(user => user.getSounds())
+      .then(user => {
+        return user.getSounds()})
       .then((sounds) => {
         callback(null, sounds);
       })

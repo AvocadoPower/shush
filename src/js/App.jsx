@@ -39,6 +39,8 @@ class App extends Component {
       currentVol: 0,
 
       triggerBoolean: true,
+
+      userMp3s: [],
     };
     
     this.timeout = 1500;
@@ -257,7 +259,9 @@ class App extends Component {
         isLoggedIn: true,
       });
       this.routeButtonClick('mic');
+      this.getSoundNames();
       this.getTriggers();
+      
     });
   }
 
@@ -294,6 +298,16 @@ class App extends Component {
     this.setState({
       triggers: [],
     }, cb())
+  }
+
+  getSoundNames() {
+    const state = this.state;
+    util.getSounds((res) => {
+      const mp3s = res.data.map((sound) => sound.name);
+      this.setState({
+        userMp3s: mp3s,
+      })
+    });
   }
 
   getTriggers() {
@@ -349,7 +363,7 @@ class App extends Component {
 
 
   render() {
-    const {isLoggedIn, rendMic, rendLogin, rendNewUser, rendSettings, username, triggers, message} = this.state;
+    const {isLoggedIn, rendMic, rendLogin, rendNewUser, rendSettings, username, triggers, message, userMp3s} = this.state;
     return (
       <div>
         <h1>{'shush'}</h1>
@@ -381,6 +395,8 @@ class App extends Component {
         {rendNewUser && <NewUserForm router={this.routeButtonClick.bind(this)} submitNewUser={this.submitNewUser.bind(this)}/>}
         {rendSettings && 
           <SettingsForm 
+            getSounds={this.getSoundNames.bind(this)}
+            userMp3s={userMp3s}
             triggers={triggers} 
             addTrigger={this.addTrigger.bind(this)}
             editTrigger={this.editTrigger.bind(this)}

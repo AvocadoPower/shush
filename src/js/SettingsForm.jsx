@@ -48,17 +48,25 @@ class SettingsForm extends React.Component {
     });
   }
   onFChange(e) {
+    const context = this;
+    // when a file is selected, convert it to buffer array and send to server
     const formData = new FormData();
     const file = e.target.files[0]
-    const fileReader = new FileReader();
-    fileReader.onload = function(event){
-      formData.append('arrayBuffer', event.target.result);
-      axios.post('/sound', formData)
-      // axios.post('/sounds', event.target.result)
-      .then(response => {console.log(`got response: ${response}`)})
-      .catch((err) => {console.log(`got err: ${err} in axios request in seetingsForm.js`)});
+    if(file){
+      const fileReader = new FileReader();
+      fileReader.onload = function(event){
+        formData.append('arrayBuffer', event.target.result);
+        axios.post('/sound', formData)
+        .then(response => {
+          let {getSounds} = context.props
+          getSounds();
+        })
+        .catch((err) => {console.log(`got err: ${err} in axios request in settingsForm.jsx`)});
+      }
+      fileReader.readAsArrayBuffer(file);
+    } else{
+      console.log('no mp3 was selected');
     }
-    fileReader.readAsArrayBuffer(file);
  
   }
 
@@ -75,7 +83,7 @@ class SettingsForm extends React.Component {
     this.props.addTrigger(newTrig);
   }
   render() {
-    const { triggers , addTrigger , editTrigger , deleteTrigger} = this.props;
+    const { triggers , addTrigger , editTrigger , deleteTrigger, userMp3s} = this.props;
     const { cGate, cMessage, cPhone, cClip, cStart, cStop} = this.state;
     return (
       <div>
@@ -150,7 +158,9 @@ class SettingsForm extends React.Component {
               <option>Sam says "back off"</option>
               <option>Sam says "get the F out my face"</option>
               <option>Sam says "shut the F up"</option>
-              <option>Upload your own mp3!</option>
+              {userMp3s.map((element) => {
+                return <option>{element}</option>
+              })}
             </select>
           </div>
           &nbsp;&nbsp;
