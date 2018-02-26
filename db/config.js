@@ -51,10 +51,22 @@ const Trigger = sequelize.define('trigger', {
   message: Sequelize.STRING,
   phone_number: Sequelize.STRING,
   clip: Sequelize.STRING,
+  listen_stop: Sequelize.TIME,
+  listen_start: Sequelize.TIME,
 });
 
 User.hasMany(Trigger, { foreignKey: 'id_user' });
 Trigger.belongsTo(User, { foreignKey: 'id_user' });
+
+// define sound
+const Sound = sequelize.define('sound', {
+  name: Sequelize.STRING,
+  url: Sequelize.STRING,
+});
+
+Sound.belongsTo(User, { foreignKey: 'user_id' });
+Trigger.hasOne(Sound, { foreignKey: 'id' });
+User.hasMany(Sound, { foreignKey: 'user_id' });
 
 // define event
 const Event = sequelize.define('event', {
@@ -67,6 +79,7 @@ Event.belongsTo(Trigger, { foreignKey: 'id_trigger' });
 User.sync();
 Moment.sync();
 Trigger.sync();
+Sound.sync();
 Event.sync();
 
 module.exports = {
@@ -74,4 +87,5 @@ module.exports = {
   Moment,
   Trigger,
   Event,
+  Sound,
 };

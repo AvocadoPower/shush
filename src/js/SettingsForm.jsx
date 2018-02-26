@@ -1,5 +1,7 @@
 import React from 'react';
 import TriggerRow from './TriggerRow.jsx'
+import axios from 'axios'
+import Dropzone from 'react-dropzone'
 
 class SettingsForm extends React.Component {
   constructor(props) {
@@ -47,7 +49,41 @@ class SettingsForm extends React.Component {
     });
   }
 
-  submitTrigger(gate, text, phone_number, clip, listen_start, listen_stop) {
+handleDrop (files) {
+  // Push all the axios request promise into a single array
+  const uploaders = files.map(file => {
+    // Initial FormData
+    const formData = new FormData();
+    formData.append("file", file);
+    // formData.append("tags", `codeinfuse, medium, gist`);
+    formData.append("upload_preset", "phtagbi6"); // Replace the preset name with your own
+    formData.append("api_key", ""); // Replace API key with your own Cloudinary key
+    formData.append("timestamp", (Date.now() / 1000) | 0);
+
+    // Make an AJAX upload request using Axios (replace Cloudinary URL below with
+    // your own)
+    return axios
+      .post("https://api.cloudinary.com/v1_1/avocadopower/video/upload", formData, {
+      headers: {
+        "X-Requested-With": "XMLHttpRequest"
+      }
+    })
+      .then((response) => {
+        const data = response.data;
+        const secURL = data.secure_url; // You should store this URL for future references in your app
+        const fileURL = data.url;
+        const fileName = data.original_filename;
+        console.log(fileURL, fileName);
+        const soundInfo = {
+          name: fileName,
+          url: fileURL,
+        }
+        return axios.post('/sound', soundInfo)
+      }).catch((err) => {console.log('it\'s mee', err)});
+    })
+  }
+
+  submitTrigger (gate, text, phone_number, clip, listen_start, listen_stop) {
     const newTrig = {
       gate: gate,
       message: text,
@@ -60,7 +96,7 @@ class SettingsForm extends React.Component {
     this.props.addTrigger(newTrig);
   }
   render() {
-    const { triggers , addTrigger , editTrigger , deleteTrigger} = this.props;
+    const { triggers , addTrigger , editTrigger , deleteTrigger, userMp3s} = this.props;
     const { cGate, cMessage, cPhone, cClip, cStart, cStop} = this.state;
     return (
       <div>
@@ -73,8 +109,8 @@ class SettingsForm extends React.Component {
               <th>text message</th>
               <th>phone number</th>
               <th>audio clip</th>
-              <th>start time</th>
-              <th>end time</th>
+              <th>stop at</th>
+              <th>resume at</th>
               <th>edit</th>
               <th>remove</th>
             </tr>
@@ -96,7 +132,7 @@ class SettingsForm extends React.Component {
         <br/>
         <div className="form-inline">
           <div className="form-group">
-            <label htmlFor="newNoiseLimit">noise limit</label>
+            <label htmlFor="newNoiseLimit">noise limit*</label>
             &nbsp;
             <select className="form-control" onChange={this.onGChange.bind(this)}>
               <option value="">select limit</option>
@@ -110,7 +146,7 @@ class SettingsForm extends React.Component {
           </div>
           &nbsp;&nbsp;
           <div className="form-group">
-            <label htmlFor="newMessage">text message</label>
+            <label htmlFor="newMessage">text message*</label>
             &nbsp;
             <input type="text" className="form-control" id="newMessage" placeholder="message" onChange={this.onMChange.bind(this)}/>
           </div>
@@ -122,7 +158,7 @@ class SettingsForm extends React.Component {
           </div>
           &nbsp;&nbsp;
           <div className="form-group">
-            <label htmlFor="newAudioClip">audio clip</label>
+            <label htmlFor="newAudioClip">audio clip*</label>
             &nbsp;
             <select className="form-control" onChange={this.onCChange.bind(this)}>
               <option value="">select clip</option>
@@ -135,20 +171,29 @@ class SettingsForm extends React.Component {
               <option>Sam says "back off"</option>
               <option>Sam says "get the F out my face"</option>
               <option>Sam says "shut the F up"</option>
-              <option>Upload your own mp3!</option>
+              {userMp3s.map((element) => {
+                return <option>{element}</option>
+              })}
             </select>
           </div>
           &nbsp;&nbsp;
           <div className="form-group">
-            <label htmlFor="startTime">start time</label>
+            <label htmlFor="startTime">stop time</label>
             &nbsp;
             <input type="time" className="form-control" id="startTime" placeholder="select" onChange={this.onSChange.bind(this)}/>
           </div>
           &nbsp;&nbsp;
           <div className="form-group">
-            <label htmlFor="endTime">end time</label>
+            <label htmlFor="endTime">resume time</label>
             &nbsp;
             <input type="time" className="form-control" id="endTime" placeholder="select" onChange={this.onEChange.bind(this)}/>
+          </div>
+          &nbsp;&nbsp;
+
+          <div className="form-group">
+            <label htmlFor="mp3upload">upload your own mp3</label>
+            &nbsp;
+            <Dropzone onDrop = { this.handleDrop } multiple accept = ".mp3"> <p>Drop your files or click here to upload</p> </Dropzone>
           </div>
           &nbsp;&nbsp;&nbsp;
           <br/>
