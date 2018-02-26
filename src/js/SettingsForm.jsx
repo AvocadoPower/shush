@@ -54,31 +54,6 @@ handleDrop (files) {
   const uploaders = files.map(file => {
     // Initial FormData
     const formData = new FormData();
-<<<<<<< HEAD
-    const file = e.target.files[0]
-    if(file){
-      const fileReader = new FileReader();
-      fileReader.onload = function(event){
-        console.log(event.target.result);
-        let myAudio = new Audio(event.target.result);
-        myAudio.play();
-        formData.append('name', file.name);
-        formData.append('url', event.target.result);
-        // TODO: UNCCOMMENT FOLLOWING LINES
-        axios.post('/sound', formData)
-        .then(response => {
-          let {getSounds} = context.props;
-          getSounds();
-        })
-        .catch((err) => {console.log(`got err: ${err} in axios request in settingsForm.jsx`)});
-      }
-      fileReader.readAsDataURL(file);
-      // fileReader.readAsArrayBuffer(file);
-    } else{
-      console.log('no mp3 was selected');
-    }
- 
-=======
     formData.append("file", file);
     // formData.append("tags", `codeinfuse, medium, gist`);
     formData.append("upload_preset", "phtagbi6"); // Replace the preset name with your own
@@ -106,7 +81,6 @@ handleDrop (files) {
         return axios.post('/sound', soundInfo)
       }).catch((err) => {console.log('it\'s mee', err)});
     })
->>>>>>> 3120464c14294b4207a18efd42c1b362ea89e686
   }
 
   submitTrigger (gate, text, phone_number, clip, listen_start, listen_stop) {
