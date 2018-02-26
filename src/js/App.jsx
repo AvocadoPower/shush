@@ -55,6 +55,8 @@ class App extends Component {
       getOutMyFace: new Audio(getOutMyFaceFile),
       shutTheFUp: new Audio(shutTheFUpFile),
     };
+
+    this.soundUrls = {};
     // convert trigger data to display these values
     // possibly create a duplicate triggers array with converted values
     this.gates = {
@@ -141,7 +143,8 @@ class App extends Component {
   makeDbTrigger(trigger) {
     let dbTrigger = Object.assign({}, trigger);
     dbTrigger.gate = this.gates[trigger.gate];
-    dbTrigger.clip = this.clips[trigger.clip];
+    dbTrigger.clip = this.clips[trigger.clip] || trigger.clip;
+    // dbTrigger.clip = this.clips[trigger.clip];
     return dbTrigger;
   }
 
@@ -193,6 +196,7 @@ class App extends Component {
   // sets displayed message and plays sound clip
   triggeredEvent(trigger, vol) {
 
+
     // TODO: wrap in set time out, so doesn't get message continuously forever
     // check to see if trigger has a phone number
     if(trigger.phone_number) {
@@ -219,7 +223,18 @@ class App extends Component {
 
     if (this.sounds[this.clips[trigger.clip]]) {
       this.sounds[this.clips[trigger.clip]].play();
+    } else if (this.sounds[trigger.clip]) {
+        // TODO: call play on user audio url:
+      this.sounds[trigger.clip].play();
+      console.log(`trigger.clip is: ${trigger.clip}`);
+    } else if (trigger.clip) {
+      // TODO: get correct url from db
+      const mp3Url = '';
+      const fakeDataUrl = '';
+      // add audio with html to this.sounds
+      this.sounds[trigger.clip] = new Audio(fakeDataUrl);
     }
+    
   }
 
   routeButtonClick(route) {
@@ -282,10 +297,21 @@ class App extends Component {
   }
 
   getTriggers() {
+    const context = this;
     if(this.state.triggerBoolean){
       util.getTriggers((res) => {
         // make trigger data user friendly
         const triggers = res.data.map((trigger) => this.convertTrigger(trigger));
+        triggers.forEach((trigger) => {
+          if(!context.sounds[context.clips[trigger.clip]] && trigger.clip){
+            console.log(trigger.clip);
+            // TODO: get correct url from db:
+            const url = '';
+            const fakeDataUrl = '';
+            context.sounds[trigger.clip] = new Audio(fakeDataUrl);
+          }
+        })
+        console.log('pretty triggers is: ', triggers);
         this.setState({
           triggers,
         });
@@ -303,6 +329,8 @@ class App extends Component {
 
   addTrigger(trigger) {
     util.addTrigger(this.makeDbTrigger(trigger), (res) => {
+      // TODO: delete console.log:
+      console.log('currently adding to trigger: ', trigger);
       this.getTriggers();
     });
   }
