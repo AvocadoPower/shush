@@ -1,4 +1,11 @@
+require('dotenv').config();
 const axios = require('axios');
+// const bcrypt = require('bcrypt');
+const sha1 = require('js-sha1');
+
+const CLOUDINARY_KEY = process.env.CLOUDINARY_API_KEY;
+const CLOUDINARY_SECRET = process.env.CLOUDINARY_API_SECRET;
+
 
 module.exports = {
   userSignup: function(user, callback) {
@@ -99,14 +106,19 @@ module.exports = {
       }
     });
   },
-  uploadSound: function (sound){
-    axios.post('https://api.cloudinary.com/v1_1/avocadopower/video/upload', {
-      params: {
-        file: sound,
-        upload_preset: 'phtagbi6',
-      }
+  uploadSound: function (sound, callback){
+    console.log(sound);
+    const timestamp = Math.round(new Date().getTime() / 1000);
+    const signature = `pubic_id=sample_sound&timestamp=${timestamp}${CLOUDINARY_SECRET}`;
+    const code = sha1(signature);
+
+    axios.post(`https://api.cloudinary.com/v1_1/avocadopower/video/upload?file=${sound}&timestamp=${timestamp}&api_key=${CLOUDINARY_KEY}&signature=${code}`)
+    .then((response) => {
+     callback(response);
+    }).catch(error => {
+      console.error(error);
     });
-  },  
+  },
   getCurrentTime: function () {
     let currentDate = new Date();
     // get current hours from date
